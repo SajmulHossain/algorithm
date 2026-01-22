@@ -1,70 +1,57 @@
 #include <stdio.h>
 
 void dekhabo(int create[], int size);
-void merge(int create[], int left, int mid, int right);
-void mergeSort(int create[], int left, int right);
+void quickSort(int create[], int low, int high);
+int partition(int create[], int low, int high);
 
 int main() {
-    int create[]= {14,12,21,7};
-    int csize= sizeof(create)/sizeof(create[0]);
+    int create[] = {14, 12, 21, 7};
+    int csize = sizeof(create) / sizeof(create[0]);
+
     printf("Jei array deya Hoyesey:\n\n");
-    dekhabo(create,csize);
-    mergeSort(create,0,csize-1);
+    dekhabo(create, csize);
+
+    quickSort(create, 0, csize - 1);
+
     printf("\nArray jeta pelam:\n\n");
-    dekhabo(create,csize);
+    dekhabo(create, csize);
+
     return 0;
 }
 
 void dekhabo(int create[], int size) {
     int i;
-    for (i =0;i<size;i++)
+    for (i = 0; i < size; i++)
         printf("%d ", create[i]);
     printf("\n");
 }
 
-void merge(int create[], int left, int mid, int right) {
-    int i, j, k;
-    int n1 = mid - left + 1;
-    int n2 = right- mid;
-    int L[n1], R[n2];
-    for (i = 0; i < n1; i++)
-        L[i] = create[left + i];
-    for (j = 0; j < n2; j++)
-        R[j] = create[mid+ 1 + j];
-    i = 0;
-    j = 0;
-    k = left;
+void quickSort(int create[], int low, int high) {
+    if (low < high) {
+        int pi = partition(create, low, high);
 
-    while (i<n1 && j<n2) {
-        if(L[i] <= R[j]) {
-            create[k]=L[i];
-            i++;
-        }
-        else {
-            create[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    while(i< n1) {
-        create[k]=L[i];
-        i++;
-        k++;
-    }
-
-    while (j<n2) {
-        create[k]=R[j];
-        j++;
-        k++;
+        quickSort(create, low, pi - 1);
+        quickSort(create, pi + 1, high);
     }
 }
 
-void mergeSort(int create[], int left, int right) {
-    if (left<right){
-        int mid = left+(right -left)/2;
-        mergeSort(create, left, mid);
-        mergeSort(create, mid +1, right);
-        merge(create, left, mid, right);
+int partition(int create[], int low, int high) {
+    int pivot = create[high];
+    int i = low - 1;
+    int j, temp;
+
+    for (j = low; j < high; j++) {
+        if (create[j] <= pivot) {
+            i++;
+            temp = create[i];
+            create[i] = create[j];
+            create[j] = temp;
+        }
     }
+
+    temp = create[i + 1];
+    create[i + 1] = create[high];
+    create[high] = temp;
+
+    return i + 1;
 }
